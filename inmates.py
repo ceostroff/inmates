@@ -19,6 +19,23 @@ def getLinks(pageVals):
     #for nextLink in nextLinks:
         #pageVals.append(nextLink.get_attributes('href'))
         #time.sleep(3)    
+        
+def getPages(pageVals):
+    global driver
+    button = driver.find_element_by_xpath("//input[@name='rsOffenderRoot_PagingMove' and @value='Next']")
+    while True:
+        try:
+            button = WebDriverWait(driver, 5, 0.25).until(EC.visibility_of_element_located([By.XPATH, "//input[@name='rsOffenderRoot_PagingMove' and @value='Next']"]))
+            button.click()
+            time.sleep(3)
+            pageSection = driver.find_element_by_class_name("dcCSStableLight")
+            pageNav = pageSection.find_elements_by_xpath("/html/body/div/div/div/table/tbody/tr/td/table/tbody/tr/td/a")
+            for pageLink in pageNav:
+                pageVals.append(pageLink.get_attribute('href'))
+        except:
+            break
+    
+        
     
 def getDetails(pageVals):
     global driver
@@ -66,7 +83,7 @@ pageVals = []
 inmates = []
         
 getLinks(pageVals) 
-
+getPages(pageVals) 
 driver.close() # close the driver 
 
 getDetails(pageVals)
